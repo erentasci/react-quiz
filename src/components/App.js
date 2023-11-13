@@ -38,8 +38,11 @@ function App() {
     }
   }
 
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const numQuestions = state.questions.length;
+  const [{ status, questions, index }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
+  const numQuestions = questions.length;
 
   useEffect(() => {
     fetch("http://localhost:8000/questions")
@@ -62,15 +65,13 @@ function App() {
       {/* <DateCounter /> */}
       <Header />
       <Main>
-        {state.status === "loading" && <Loader />}
-        {state.status === "error" && <Error />}
-        {state.status === "ready" && (
+        {status === "loading" && <Loader />}
+        {status === "error" && <Error />}
+        {status === "ready" && (
           <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
         )}
-
       </Main>
-      {state.status === "active" && <Question />}
-
+      {status === "active" && <Question question={questions[index]} />}
     </div>
   );
 }
